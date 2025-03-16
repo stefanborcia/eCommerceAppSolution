@@ -1,4 +1,7 @@
-﻿using eCommerceApp.Domain.Interfaces;
+﻿using eCommerceApp.Application.Exceptions;
+using eCommerceApp.Domain.Interfaces;
+using eCommerceApp.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,31 +10,38 @@ using System.Threading.Tasks;
 
 namespace eCommerceApp.Infrastructure.Repositories
 {
-    public class GenericRepository<TEntity> : IGeneric<TEntity> where TEntity : class
+    public class GenericRepository<TEntity>(AppDbContext context) : IGeneric<TEntity> where TEntity : class
     {
-        public Task<int> AddAsync(TEntity entity)
+        public async Task<int> AddAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            context.Set<TEntity>().Add(entity);
+            return await context.SaveChangesAsync();
         }
 
-        public Task<int> DeleteAsync(Guid id)
+        public async Task<int> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var entity = await context.Set<TEntity>().FindAsync(id)
+                ?? throw new ItemNotFoundException($"Item with {id} not found");
+
+            context.Set<TEntity>().Remove(entity);
+            return await context.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<TEntity>> GetAllAsync()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await context.Set<TEntity>().AsNoTracking().ToListAsync();
         }
 
-        public Task<TEntity> GetByIdAsync(Guid id)
+        public async Task<TEntity> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var result = await context.Set<TEntity>().FindAsync(id);
+            return result!;
         }
 
-        public Task<int> UpdateAsync(TEntity entity)
+        public async Task<int> UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            context.Set<TEntity>().Remove(entity);
+            return await context.SaveChangesAsync();
         }
     }
 }
