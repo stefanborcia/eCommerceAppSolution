@@ -1,4 +1,6 @@
 ﻿
+using eCommerceApp.Application.DTOs.Category;
+
 namespace eCommerceApp.Application.DTOs.Product
 {
     public class GetProduct : ProductBase

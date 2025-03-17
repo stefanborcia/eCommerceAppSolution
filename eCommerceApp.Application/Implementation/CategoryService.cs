@@ -1,11 +1,7 @@
 ﻿using eCommerceApp.Application.DTOs;
 using eCommerceApp.Application.DTOs.Category;
 using eCommerceApp.Application.Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace eCommerceApp.Application.Implementation
 {
