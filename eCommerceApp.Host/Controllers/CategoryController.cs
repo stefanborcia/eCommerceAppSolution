@@ -1,4 +1,4 @@
-﻿using eCommerceApp.Application.DTOs.Product;
+﻿using eCommerceApp.Application.DTOs.Category;
 using eCommerceApp.Application.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,12 +6,12 @@ namespace eCommerceApp.Host.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController(IProductService productService) : ControllerBase
+    public class CategoryController(ICategoryService categoryService) : ControllerBase
     {
         [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
-            var data = await productService.GetAllAsync();
+            var data = await categoryService.GetAllAsync();
 
             return data.Count() > 0 ? Ok(data) : NotFound(data);
         }
@@ -19,29 +19,29 @@ namespace eCommerceApp.Host.Controllers
         [HttpGet("single/{id}")]
         public async Task<IActionResult> GetSignle(Guid id)
         {
-            var data = await productService.GetByIdAsync(id);
+            var data = await categoryService.GetByIdAsync(id);
 
             return data != null ? Ok(data) : NotFound(data);
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> Add(CreateProduct product)
+        public async Task<IActionResult> Add(CreateCategory category)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            if(!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-            var result = await productService.AddAsync(product);
+            var result = await categoryService.AddAsync(category);
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> Update(UpdateProduct product)
+        public async Task<IActionResult> Update(UpdateCategory category)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await productService.UpdateAsync(product);
+            var result = await categoryService.UpdateAsync(category);
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
@@ -49,7 +49,7 @@ namespace eCommerceApp.Host.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await productService.DeleteAsync(id);
+            var result = await categoryService.DeleteAsync(id);
             return result.Success ? Ok(result) : BadRequest(result);
         }
     }
